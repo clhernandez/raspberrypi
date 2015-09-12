@@ -1,32 +1,13 @@
 import RPi.GPIO as GPIO
-import time
+import time, sys
 
-<<<<<<< HEAD
 dot=0.2
 line=dot*3
 word=line*3
-
-def ledOn(port, t):
-	GPIO.output(port ,1)
-	time.sleep(t)
-	ledOff(port)
-
-def ledOff(port):
-	GPIO.output(port, 0)
-	time.sleep(0.2)
-
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(12, GPIO.OUT)
-ledOff(12);
-
-ledOn(12, 2)
-
-GPIO.cleanup()
-=======
-dot=0.1
-line=dot*3
-word=line*3
+port=12
 CODE={'':'',"'":'.----.', '(':'-.--.-', ')':'-.--.-', ',':'--..--', '-':'-....-', '.':'.-.-.-', '/':'-..-.', '0':'-----', '1':'.----', '2':'..---', '3':'...--', '4':'....-', '5':'.....', '6':'-....', '7':'--...', '8':'---..', '9':'----.', ':':'---...', ';':'-.-.-.', '?':'..--..', 'A':'.-', 'B':'-...', 'C':'-.-.', 'D':'-..', 'E':'.', 'F':'..-.', 'G':'--.', 'H':'....', 'I':'..', 'J':'.---', 'K':'-.-', 'L':'.-..', 'M':'--', 'N':'-.', 'O':'---', 'P':'.--.', 'Q':'--.-', 'R':'.-.', 'S':'...', 'T':'-', 'U':'..-', 'V':'...-', 'W':'.--', 'X':'-..-', 'Y':'-.--', 'Z':'--..', '_':'..--.-', ' ': ' '}
+GPIO.setmode(GPIO.BOARD)
+text=""
 
 def toMorse(txt):
 	txt = txt.upper()
@@ -35,6 +16,7 @@ def toMorse(txt):
 		morse += CODE[txt[x]]
 		pass
 	return morse
+
 def transmitCode(morse):
 	print morse
 	char =""
@@ -46,7 +28,6 @@ def transmitCode(morse):
 				char = line;
 			else:
 				char = word
-		print char
 		sendCode(char)
 		pass
 
@@ -55,12 +36,18 @@ def sendCode(t):
 	if(t!=word):
 		GPIO.output(port ,1)
 		time.sleep(t)
-		GPIO.oputput(port, 0)
+		GPIO.output(port, 0)
+		time.sleep(dot)
 	else:
-		time.sleep(t)
+		time.sleep(word)
 
+GPIO.setup(port, GPIO.OUT)
+if(len(sys.argv)>1):
+	for x in xrange(1, len(sys.argv)):
+		text += sys.argv[x] +" "
 
-txt = "Raspberrypi morsecodder"
-transmitCode(toMorse(txt))
+	text = text[0:len(text)-1]
+else:
+	text = "Raspberrypi morsecodder"
+transmitCode(toMorse(text))
 GPIO.cleanup()
->>>>>>> f1a97d1cbb1c6fcb6a15ebe63f02aa8b40ff0928
